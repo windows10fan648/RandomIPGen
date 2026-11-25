@@ -87,13 +87,21 @@ No additional environment variables are required for normal operation.
 
 ## MCP server
 
-Run a minimal Model Context Protocol server over stdio:
+Run a Streamable HTTP MCP server:
 
 ```bash
 node mcp-server.js
 ```
 
-It exposes `generate_ips` and `validate_ip` tools for LLMs.
+It listens on `http://localhost:3001/mcp` by default and exposes `generate_ips` and `validate_ip` tools. The same endpoint is also mounted in the Express app at `/mcp`.
+
+## Recent changes
+
+- Added IPv4/IPv6 IP range selector with backend filtering.
+- Added Export as JSON and append-random-ports toggle (IPv6 uses bracket formatting).
+- Added rate limiting (100 requests/minute per IP) and `trust proxy`.
+- Added "Copied!" feedback and About link theming.
+- Added MCP server (Streamable HTTP) for LLM tool access.
 
 ## Tests
 

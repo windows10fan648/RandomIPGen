@@ -29,3 +29,11 @@
 - [x] Implement IPv6 bracketed port formatting and re-enable the checkbox for IPv6.
 - [x] Add "Copied!" feedback state to individual "Copy" and "Copy All" buttons.
 - [x] Change the "Back to generator" link color on the About page to match the primary blue theme.
+
+## Recent changes (do not remove)
+
+- Added IP range selector (IPv4 + IPv6 presets) with backend validation/filtering.
+- Added Export as JSON and append-random-ports toggle (IPv6 bracket formatting).
+- Rate limit set to 100 requests/minute per IP with `trust proxy`.
+- Added MCP server using Streamable HTTP (`mcp.js`, `/mcp` endpoint, `mcp-server.js`).
+- vercel.json routes `/api/*` to Express and bundles `views/`.
