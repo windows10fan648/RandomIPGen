@@ -1,5 +1,5 @@
 import { createRequire } from 'node:module';
-import { generateAddresses, isValidVersion, isValidCount, isValidRange, allowedRanges } from './generator.js';
+import { generateAddresses, isValidVersion, isValidCount, isValidRange, allowedRanges, validateIP } from './generator.js';
 
 const require = createRequire(import.meta.url);
 const { RandomIPv4, RandomIPv6 } = require('random-ip-gen');
@@ -103,8 +103,7 @@ export function handleMcpRequest(req) {
 
     if (name === 'validate_ip') {
       try {
-        const cls = args.version === 'ipv4' ? RandomIPv4 : RandomIPv6;
-        const ok = cls.validate(args.ip);
+        const ok = validateIP(args.version, args.ip);
         return { jsonrpc: '2.0', id, result: { content: [{ type: 'text', text: JSON.stringify({ valid: ok }) }] } };
       } catch (err) {
         return { jsonrpc: '2.0', id, result: { content: [{ type: 'text', text: err.message }], isError: true } };

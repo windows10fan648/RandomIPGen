@@ -23,6 +23,14 @@ export function isValidCount(count) {
   return Number.isInteger(count) && count >= 1 && count <= 100;
 }
 
+export function validateIP(version, ip) {
+  if (typeof ip !== 'string') return false;
+  const family = isIP(ip);
+  if (version === 'ipv4') return family === 4;
+  if (version === 'ipv6') return family === 6;
+  return false;
+}
+
 function ipv4ToInt(ip) {
   const parts = ip.split('.').map(Number);
   return (((parts[0] * 256 + parts[1]) * 256 + parts[2]) * 256 + parts[3]) >>> 0;
@@ -136,6 +144,10 @@ function randomV6Hextet() {
 }
 
 function randomV6InRange(range) {
+  if (range === 'link-local') {
+    // Typical link-local form: fe80::/64 + 64-bit interface id
+    return 'fe80::' + Array.from({ length: 4 }, () => randomV6Hextet()).join(':');
+  }
   let first;
   switch (range) {
     case 'global':
@@ -143,9 +155,6 @@ function randomV6InRange(range) {
       break;
     case 'unique-local':
       first = (0xfc00 + randInt(0x0200)).toString(16).padStart(4, '0');
-      break;
-    case 'link-local':
-      first = (0xfe80 + randInt(0x0040)).toString(16).padStart(4, '0');
       break;
     case 'multicast':
       first = (0xff00 + randInt(0x0100)).toString(16).padStart(4, '0');
@@ -199,8 +208,7 @@ export function generateAddresses(version, count, range = 'any') {
 
     if (
       candidate &&
-      GeneratorClass.validate(candidate) &&
-      isIP(candidate) === expectedFamily &&
+      validateIP(version, candidate) &&
       (range === 'any' || range === 'public' || inRangeFn(candidate, range))
     ) {
       accepted.add(candidate);
