@@ -66,6 +66,14 @@ app.get('/about', (_req, res) => {
   res.render('about', { title: 'About - RandomIPGen' });
 });
 
+app.get('/privacy', (_req, res) => {
+  res.render('privacy', { title: 'Privacy Policy - RandomIPGen' });
+});
+
+app.get('/terms', (_req, res) => {
+  res.render('terms', { title: 'Terms of Service - RandomIPGen' });
+});
+
 // Rate limit API generation endpoint
 app.use('/api/generate', rateLimiter);
 
