@@ -30,6 +30,21 @@
 - [x] Add "Copied!" feedback state to individual "Copy" and "Copy All" buttons.
 - [x] Change the "Back to generator" link color on the About page to match the primary blue theme.
 
+## Agent rules (important)
+
+- **Do not remove or disable existing features.** Agents may only fix bugs or improve the app.
+- Preserve all routes, endpoints, MCP tools, and UI features listed below.
+
+## Current features (do not remove)
+
+- IPv4/IPv6 generation with 1-100 quantity and range selector.
+- Results list with per-item copy, Copy All, Download TXT, Export JSON.
+- Append random ports toggle (IPv4 colon, IPv6 brackets).
+- Rate limiting 100 req/min per IP, trust proxy.
+- Privacy and Terms pages, About with bug report link.
+- MCP Streamable HTTP server (`/mcp`, `mcp-server.js`) with titles/annotations.
+- Tests via `node --test`.
+
 ## Recent changes (do not remove)
 
 - Added IP range selector (IPv4 + IPv6 presets) with backend validation/filtering.
