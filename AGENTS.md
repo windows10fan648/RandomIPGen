@@ -30,6 +30,10 @@
 - [x] Add "Copied!" feedback state to individual "Copy" and "Copy All" buttons.
 - [x] Change the "Back to generator" link color on the About page to match the primary blue theme.
 
+## Infrastructure & Security
+- **Vercel WAF**: A global edge rule exists in the Vercel Dashboard (not in the repo) that rate-limits requests to `/api/generate` AND `/mcp` to 100 req/min per IP, denying with a 403.
+- **Do not attempt to recreate this WAF rule in Express.** The Express in-memory limiter is a secondary fallback. The Vercel WAF is the primary defense.
+
 ## Agent rules (important)
 
 - **Do not remove or disable existing features.** Agents may only fix bugs or improve the app.
