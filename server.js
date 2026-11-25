@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
 import { generateAddresses, isValidVersion, isValidCount, isValidRange, allowedRanges } from './generator.js';
+import { handleMcpRequest } from './mcp.js';
 
 dotenv.config();
 
@@ -124,6 +125,32 @@ app.post('/api/generate', (req, res) => {
       error: 'Failed to generate addresses. Please try again.',
     });
   }
+});
+
+// MCP Streamable HTTP endpoint
+app.post('/mcp', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  const body = req.body;
+  const handleOne = (r) => handleMcpRequest(r);
+
+  if (Array.isArray(body)) {
+    const results = body.map(handleOne).filter((r) => r !== null);
+    return res.status(200).json(results);
+  }
+
+  const result = handleOne(body);
+  if (result === null) {
+    return res.status(202).end();
+  }
+  return res.status(200).json(result);
+});
+
+app.get('/mcp', (_req, res) => {
+  res.status(405).set('Allow', 'POST, DELETE').json({ error: 'Method not allowed. Use POST.' });
+});
+
+app.delete('/mcp', (_req, res) => {
+  res.status(204).end();
 });
 
 // 404
