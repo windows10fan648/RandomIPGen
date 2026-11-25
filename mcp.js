@@ -7,7 +7,14 @@ const { RandomIPv4, RandomIPv6 } = require('random-ip-gen');
 const TOOLS = [
   {
     name: 'generate_ips',
+    title: 'Generate IP Addresses',
     description: 'Generate random IPv4 or IPv6 addresses for testing and demonstration.',
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
+    },
     inputSchema: {
       type: 'object',
       properties: {
@@ -19,7 +26,14 @@ const TOOLS = [
   },
   {
     name: 'validate_ip',
+    title: 'Validate IP Address',
     description: 'Validate an IPv4 or IPv6 address.',
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
     inputSchema: {
       type: 'object',
       properties: {
