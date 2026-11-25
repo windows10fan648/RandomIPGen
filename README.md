@@ -85,6 +85,16 @@ curl -X POST http://localhost:3000/api/generate \
 
 No additional environment variables are required for normal operation.
 
+## MCP server
+
+Run a minimal Model Context Protocol server over stdio:
+
+```bash
+node mcp-server.js
+```
+
+It exposes `generate_ips` and `validate_ip` tools for LLMs.
+
 ## Tests
 
 ```bash
