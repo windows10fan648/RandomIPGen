@@ -25,7 +25,9 @@ export function isValidCount(count) {
 
 export function validateIP(version, ip) {
   if (typeof ip !== 'string') return false;
-  const family = isIP(ip);
+  // Allow optional CIDR prefix (e.g. fe80::.../64)
+  const candidate = ip.split('/')[0].trim();
+  const family = isIP(candidate);
   if (version === 'ipv4') return family === 4;
   if (version === 'ipv6') return family === 6;
   return false;
