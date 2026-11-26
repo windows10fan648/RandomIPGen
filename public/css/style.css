@@ -263,6 +263,11 @@ input[type="checkbox"]:disabled {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 12px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.result-item:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
 }
 .result-addr {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
@@ -324,4 +329,7 @@ input[type="checkbox"]:disabled {
 @media (max-width: 600px) {
   .hero h1 { font-size: 1.7rem; }
   .results-header { flex-direction: column; align-items: flex-start; }
+  .global-controls { flex-direction: column; }
+  .global-controls .btn { width: 100%; }
+  .field input, .field select { max-width: 100%; }
 }
