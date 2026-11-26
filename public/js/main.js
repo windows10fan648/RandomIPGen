@@ -49,6 +49,35 @@
   populateRanges(selectedVersion);
   updatePortsToggleState();
 
+  // Restore saved settings
+  try {
+    const saved = JSON.parse(localStorage.getItem('ripSettings') || '{}');
+    if (saved.version === 'ipv4' || saved.version === 'ipv6') {
+      selectedVersion = saved.version;
+      versionButtons.forEach((b) => {
+        const active = b.dataset.version === selectedVersion;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      populateRanges(selectedVersion);
+      updatePortsToggleState();
+    }
+    if (typeof saved.count === 'number') countInput.value = saved.count;
+    if (saved.range) rangeSelect.value = saved.range;
+    if (typeof saved.ports === 'boolean') portsToggle.checked = saved.ports;
+  } catch (e) {}
+
+  function saveSettings() {
+    try {
+      localStorage.setItem('ripSettings', JSON.stringify({
+        version: selectedVersion,
+        count: Number(countInput.value),
+        range: rangeSelect.value,
+        ports: portsToggle.checked,
+      }));
+    } catch (e) {}
+  }
+
   function randomPort() {
     return Math.floor(Math.random() * 65535) + 1;
   }
@@ -98,7 +127,8 @@
       btn.setAttribute('aria-pressed', 'true');
       selectedVersion = btn.dataset.version;
       populateRanges(selectedVersion);
-  updatePortsToggleState();
+      updatePortsToggleState();
+      saveSettings();
     });
   });
 
@@ -111,7 +141,17 @@
     regenerateBtn.disabled = invalid || generating || !hasResults;
   }
 
-  countInput.addEventListener('input', updateGenerateButton);
+  countInput.addEventListener('input', () => {
+    updateGenerateButton();
+    saveSettings();
+  });
+
+  rangeSelect.addEventListener('change', saveSettings);
+
+  portsToggle.addEventListener('change', () => {
+    renderResults();
+    saveSettings();
+  });
 
   function renderResults() {
     resultsList.innerHTML = '';
@@ -243,10 +283,6 @@
     a.remove();
     URL.revokeObjectURL(url);
     showToast('Exported JSON file', 'success');
-  });
-
-  portsToggle.addEventListener('change', () => {
-    renderResults();
   });
 
   // Keyboard: Enter on count triggers generate
