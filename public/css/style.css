@@ -352,6 +352,11 @@ input[type="checkbox"]:disabled {
   color: var(--muted);
   font-size: 0.85rem;
 }
+.site-footer .disclaimer {
+  font-size: 0.8rem;
+  opacity: 0.85;
+  margin-top: 8px;
+}
 
 .toast {
   position: fixed;

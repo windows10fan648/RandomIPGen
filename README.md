@@ -117,3 +117,5 @@ node --test
 ## Notes
 
 Generated addresses are random examples suitable for testing and demonstration. They do not belong to real devices and are not guaranteed to be publicly routable or online.
+
+A legal disclaimer is displayed in the site footer.

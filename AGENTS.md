@@ -49,6 +49,7 @@
 - Rate limiting 100 req/min per IP, trust proxy, plus Vercel WAF.
 - Security headers, SEO metadata, robots.txt, sitemap.xml.
 - Privacy and Terms pages, About with bug report link and side-project note.
+- Legal disclaimer in footer.
 - MCP Streamable HTTP server (`/mcp`, `mcp-server.js`) with titles/annotations and CORS.
 - MCP tools: generate_ips, validate_ip, list_ranges, ip_info, generate_with_ports, generate_in_cidr, bulk_validate.
 - Settings persisted in localStorage; aria-live results.
