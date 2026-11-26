@@ -66,9 +66,30 @@ app.use((req, res, next) => {
   next();
 });
 
-// Home
-app.get('/', (_req, res) => {
-  res.render('index', { title: 'RandomIPGen' });
+function detectDevice(ua) {
+  const agent = ua || '';
+  const isTablet = /iPad|Tablet|PlayBook|Silk/i.test(agent) || (/Android/i.test(agent) && !/Mobile/i.test(agent));
+  const isMobile = /Mobi|Android.*Mobile|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(agent);
+  if (isTablet) return 'tablet';
+  if (isMobile) return 'mobile';
+  return 'desktop';
+}
+
+// Device-specific pages
+app.get('/mobile', (_req, res) => {
+  res.render('index', { title: 'RandomIPGen', device: 'mobile' });
+});
+
+app.get('/tablet', (_req, res) => {
+  res.render('index', { title: 'RandomIPGen', device: 'tablet' });
+});
+
+// Home with automatic device detection
+app.get('/', (req, res) => {
+  const device = detectDevice(req.headers['user-agent']);
+  if (device === 'mobile') return res.redirect('/mobile');
+  if (device === 'tablet') return res.redirect('/tablet');
+  res.render('index', { title: 'RandomIPGen', device: 'desktop' });
 });
 
 app.get('/about', (_req, res) => {
