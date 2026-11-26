@@ -204,8 +204,8 @@ input[type="checkbox"]:disabled {
 }
 .btn:active { transform: translateY(1px); }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover:not(:disabled) { background: var(--accent-2); }
+.btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 14px rgba(79, 140, 255, 0.3); }
+.btn-primary:hover:not(:disabled) { background: var(--accent-2); box-shadow: 0 6px 18px rgba(79, 140, 255, 0.4); }
 .btn-secondary { background: var(--card-2); color: var(--text); border: 1px solid var(--border); }
 .btn-secondary:hover:not(:disabled) { background: var(--border); }
 
