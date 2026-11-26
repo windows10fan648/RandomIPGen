@@ -146,6 +146,9 @@ app.post('/api/generate', (req, res) => {
 
 // MCP Streamable HTTP endpoint
 app.post('/mcp', (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Methods', 'POST, GET, DELETE, OPTIONS');
+  res.set('Access-Control-Allow-Headers', 'Content-Type');
   res.set('Cache-Control', 'no-store');
   const body = req.body;
   const handleOne = (r) => handleMcpRequest(r);
@@ -160,6 +163,13 @@ app.post('/mcp', (req, res) => {
     return res.status(202).end();
   }
   return res.status(200).json(result);
+});
+
+app.options('/mcp', (_req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Methods', 'POST, GET, DELETE, OPTIONS');
+  res.set('Access-Control-Allow-Headers', 'Content-Type');
+  res.status(204).end();
 });
 
 app.get('/mcp', (_req, res) => {
