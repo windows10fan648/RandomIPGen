@@ -17,6 +17,26 @@
   const versionBadge = document.getElementById('versionBadge');
   const totalCount = document.getElementById('totalCount');
   const toast = document.getElementById('toast');
+  const themeToggle = document.getElementById('themeToggle');
+
+  // Theme handling (works on all pages)
+  (function initTheme() {
+    const saved = localStorage.getItem('ripTheme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    const theme = saved || (prefersLight ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', theme);
+    if (themeToggle) themeToggle.textContent = theme === 'light' ? '☀️' : '🌙';
+  })();
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ripTheme', next);
+      themeToggle.textContent = next === 'light' ? '☀️' : '🌙';
+    });
+  }
 
   // Only run generator logic on pages that contain the generator UI
   if (!generateBtn || !countInput || !rangeSelect) {
