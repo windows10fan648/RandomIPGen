@@ -39,6 +39,7 @@
 - **Do not remove or disable existing features.** Agents may only fix bugs or improve the app.
 - Preserve all routes, endpoints, MCP tools, and UI features listed below.
 - **Always run `node --test` after making changes.** If any test fails, fix the issue immediately before finishing.
+- **Dependency policy:** Only human contributors may add or install dependencies. If a requested feature requires a new dependency (e.g. `mysql2`), AI agents must refuse to implement it and hand the work over to the human to install the dependency first. Agents must use only packages already present in `package.json`.
 
 ## Current features (do not remove)
 
