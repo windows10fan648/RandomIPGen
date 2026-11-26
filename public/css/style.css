@@ -252,6 +252,8 @@ input[type="checkbox"]:disabled {
   gap: 8px;
   max-height: 420px;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) var(--bg-2);
 }
 
 .result-item {
