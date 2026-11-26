@@ -242,7 +242,9 @@ input[type="checkbox"]:disabled {
   color: var(--muted);
   border: 1px dashed var(--border);
   border-radius: 10px;
+  transition: border-color 0.15s ease;
 }
+.empty-state:hover { border-color: var(--accent); }
 
 .results-list {
   list-style: none;
