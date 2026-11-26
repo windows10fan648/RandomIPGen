@@ -33,6 +33,115 @@ export function validateIP(version, ip) {
   return false;
 }
 
+export function classifyIP(version, ip) {
+  const candidate = String(ip || '').split('/')[0].trim();
+  if (!validateIP(version, candidate)) return null;
+
+  if (version === 'ipv4') {
+    const n = ipv4ToInt(candidate);
+    const isPrivate =
+      ((n & 0xff000000) >>> 0) === 0x0a000000 ||
+      ((n & 0xfff00000) >>> 0) === 0xac100000 ||
+      ((n & 0xffff0000) >>> 0) === 0xc0a80000;
+    const isLoopback = ((n & 0xff000000) >>> 0) === 0x7f000000;
+    const isLinkLocal = ((n & 0xffff0000) >>> 0) === 0xa9fe0000;
+    const isMulticast = ((n & 0xf0000000) >>> 0) === 0xe0000000;
+    return {
+      private: isPrivate,
+      loopback: isLoopback,
+      linkLocal: isLinkLocal,
+      multicast: isMulticast,
+      public: !isPrivate && !isLoopback && !isLinkLocal && !isMulticast,
+    };
+  }
+
+  const value = ipv6ToBigInt(candidate);
+  const isLoopback = candidate === '::1';
+  const isLinkLocal = (value >> 118n) === 0x3fan;
+  const isUniqueLocal = (value >> 121n) === 0x7en;
+  const isMulticast = (value >> 120n) === 0xffn;
+  const isGlobal = (value >> 125n) === 1n;
+  return {
+    loopback: isLoopback,
+    linkLocal: isLinkLocal,
+    uniqueLocal: isUniqueLocal,
+    multicast: isMulticast,
+    global: isGlobal,
+  };
+}
+
+function bigIntToIpv6(value) {
+  const parts = [];
+  let v = value;
+  for (let i = 0; i < 8; i++) {
+    parts.unshift((v & 0xffffn).toString(16).padStart(4, '0'));
+    v >>= 16n;
+  }
+  return parts.join(':');
+}
+
+export function generateInCidr(version, cidr, count) {
+  if (!isValidVersion(version)) throw new Error('Invalid IP version.');
+  if (!isValidCount(count)) throw new Error('Invalid quantity. Must be an integer between 1 and 100.');
+
+  const [ip, prefixStr] = String(cidr || '').split('/');
+  if (!validateIP(version, ip)) throw new Error('Invalid CIDR base IP.');
+  const prefix = Number(prefixStr);
+  const maxPrefix = version === 'ipv4' ? 32 : 128;
+  if (!Number.isInteger(prefix) || prefix < 0 || prefix > maxPrefix) {
+    throw new Error(`Invalid prefix. Must be 0-${maxPrefix}.`);
+  }
+
+  const accepted = new Set();
+  const maxAttempts = count * 50 + 1000;
+  let attempts = 0;
+
+  if (version === 'ipv4') {
+    const base = ipv4ToInt(ip);
+    const hostBits = 32 - prefix;
+    const mask = hostBits === 32 ? 0 : (0xffffffff << hostBits) >>> 0;
+    const network = (base & mask) >>> 0;
+    const space = hostBits >= 31 ? (hostBits === 31 ? 2 : 1) : Math.pow(2, hostBits);
+    while (accepted.size < count && attempts < maxAttempts) {
+      attempts += 1;
+      const offset = hostBits === 0 ? 0 : Math.floor(Math.random() * space);
+      const val = (network + offset) >>> 0;
+      const octets = [ (val >>> 24) & 255, (val >>> 16) & 255, (val >>> 8) & 255, val & 255 ];
+      const candidate = octets.join('.');
+      if (validateIP('ipv4', candidate)) accepted.add(candidate);
+    }
+  } else {
+    const base = ipv6ToBigInt(ip);
+    const hostBits = 128 - prefix;
+    const allOnes = (1n << 128n) - 1n;
+    const mask = hostBits === 0 ? allOnes : allOnes ^ ((1n << BigInt(hostBits)) - 1n);
+    const network = base & mask;
+    const space = hostBits > 62 ? null : 1n << BigInt(hostBits);
+    while (accepted.size < count && attempts < maxAttempts) {
+      attempts += 1;
+      let offset;
+      if (space === null) {
+        // generate random host bits
+        offset = 0n;
+        for (let i = 0; i < hostBits; i++) {
+          if (Math.random() < 0.5) offset |= 1n << BigInt(i);
+        }
+      } else {
+        offset = BigInt(Math.floor(Math.random() * Number(space)));
+      }
+      const val = network | offset;
+      const candidate = bigIntToIpv6(val);
+      if (validateIP('ipv6', candidate)) accepted.add(candidate);
+    }
+  }
+
+  const addresses = [...accepted].slice(0, count);
+  if (addresses.length < count) {
+    throw new Error('Unable to generate enough addresses in the selected CIDR.');
+  }
+  return addresses;
+}
+
 function ipv4ToInt(ip) {
   const parts = ip.split('.').map(Number);
   return (((parts[0] * 256 + parts[1]) * 256 + parts[2]) * 256 + parts[3]) >>> 0;
