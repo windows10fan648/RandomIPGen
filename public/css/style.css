@@ -376,10 +376,31 @@ input[type="checkbox"]:disabled {
 .toast.error { border-color: var(--danger); color: var(--danger); }
 .toast.success { border-color: var(--success); color: var(--success); }
 
+.btn-block { width: 100%; }
+
+.tablet-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .tablet-grid { grid-template-columns: 1fr; }
+}
+
+/* Touch-friendly targets */
+button, .toggle-btn, .copy-btn {
+  min-height: 44px;
+}
+input, select {
+  min-height: 44px;
+}
+
 @media (max-width: 600px) {
   .hero h1 { font-size: 1.7rem; }
   .results-header { flex-direction: column; align-items: flex-start; }
   .global-controls { flex-direction: column; }
   .global-controls .btn { width: 100%; }
   .field input, .field select { max-width: 100%; }
+  body.mobile .container { padding: 0 12px; }
 }

@@ -1,0 +1,60 @@
+<%- include('partials/header') %>
+
+<main class="container mobile">
+  <section class="hero">
+    <h1>Random IP Generator</h1>
+    <p>Generate random IPv4 and IPv6 addresses instantly.</p>
+  </section>
+
+  <section class="card generator-card">
+    <div class="version-toggle" role="radiogroup" aria-label="IP version">
+      <button type="button" class="toggle-btn active" data-version="ipv4" aria-pressed="true">IPv4</button>
+      <button type="button" class="toggle-btn" data-version="ipv6" aria-pressed="false">IPv6</button>
+    </div>
+
+    <div class="field">
+      <label for="count">Quantity (1-100)</label>
+      <input id="count" type="number" min="1" max="100" value="10" inputmode="numeric" />
+    </div>
+
+    <div class="field">
+      <label for="range">IP range</label>
+      <select id="range"></select>
+    </div>
+
+    <div class="checkbox-container">
+      <label for="portsToggle">Append random ports</label>
+      <input id="portsToggle" type="checkbox" />
+    </div>
+
+    <button id="generateBtn" class="btn btn-primary btn-block" type="button">
+      <span class="btn-text">Generate IPs</span>
+      <span class="spinner" aria-hidden="true" hidden></span>
+    </button>
+  </section>
+
+  <section class="card results-card">
+    <div class="results-header">
+      <h2>Results</h2>
+      <span id="versionBadge" class="badge" hidden></span>
+    </div>
+    <p id="resultsMeta" class="muted" aria-live="polite">No addresses generated yet.</p>
+
+    <div id="emptyState" class="empty-state">
+      <p>Generate addresses to see them here.</p>
+    </div>
+
+    <ul id="resultsList" class="results-list" hidden></ul>
+
+    <div class="global-controls" id="globalControls" hidden>
+      <button id="copyAllBtn" class="btn btn-secondary btn-block" type="button">Copy All</button>
+      <button id="exportJsonBtn" class="btn btn-secondary btn-block" type="button">Export JSON</button>
+      <button id="downloadBtn" class="btn btn-secondary btn-block" type="button">Download TXT</button>
+      <button id="regenerateBtn" class="btn btn-secondary btn-block" type="button">Generate Again</button>
+    </div>
+
+    <p id="totalCount" class="muted total" hidden></p>
+  </section>
+</main>
+
+<%- include('partials/footer') %>
