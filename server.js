@@ -77,11 +77,11 @@ function detectDevice(ua) {
 
 // Device-specific pages
 app.get('/mobile', (_req, res) => {
-  res.render('index', { title: 'RandomIPGen', device: 'mobile' });
+  res.render('mobile', { title: 'RandomIPGen', device: 'mobile' });
 });
 
 app.get('/tablet', (_req, res) => {
-  res.render('index', { title: 'RandomIPGen', device: 'tablet' });
+  res.render('tablet', { title: 'RandomIPGen', device: 'tablet' });
 });
 
 // Home with automatic device detection
@@ -93,15 +93,15 @@ app.get('/', (req, res) => {
 });
 
 app.get('/about', (_req, res) => {
-  res.render('about', { title: 'About - RandomIPGen' });
+  res.render('about', { title: 'About - RandomIPGen', device: 'desktop' });
 });
 
 app.get('/privacy', (_req, res) => {
-  res.render('privacy', { title: 'Privacy Policy - RandomIPGen' });
+  res.render('privacy', { title: 'Privacy Policy - RandomIPGen', device: 'desktop' });
 });
 
 app.get('/terms', (_req, res) => {
-  res.render('terms', { title: 'Terms of Service - RandomIPGen' });
+  res.render('terms', { title: 'Terms of Service - RandomIPGen', device: 'desktop' });
 });
 
 // Rate limit API generation endpoint
