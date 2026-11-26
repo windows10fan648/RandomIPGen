@@ -25,7 +25,6 @@
     const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
     const theme = saved || (prefersLight ? 'light' : 'dark');
     document.documentElement.setAttribute('data-theme', theme);
-    if (themeToggle) themeToggle.textContent = theme === 'light' ? '☀️' : '🌙';
   })();
 
   if (themeToggle) {
@@ -34,7 +33,6 @@
       const next = current === 'light' ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('ripTheme', next);
-      themeToggle.textContent = next === 'light' ? '☀️' : '🌙';
     });
   }
 
