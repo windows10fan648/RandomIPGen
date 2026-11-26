@@ -97,6 +97,7 @@ It listens on `http://localhost:3001/mcp` by default and exposes `generate_ips` 
 
 ## Recent changes
 
+- Added device-specific views (/mobile, /tablet) with touch-optimized UI.
 - Added IPv4/IPv6 IP range selector with backend filtering.
 - Added Export as JSON and append-random-ports toggle (IPv6 uses bracket formatting).
 - Added rate limiting (100 requests/minute per IP) and `trust proxy`.
