@@ -102,6 +102,10 @@ It listens on `http://localhost:3001/mcp` by default and exposes `generate_ips` 
 - Added rate limiting (100 requests/minute per IP) and `trust proxy`.
 - Added "Copied!" feedback and About link theming.
 - Added MCP server (Streamable HTTP) for LLM tool access.
+- Added MCP tools: list_ranges, ip_info, generate_with_ports, generate_in_cidr, bulk_validate.
+- Added dark/light theme toggle with Lucide icons and persisted preference.
+- Added security headers, SEO metadata, robots.txt, sitemap.xml.
+- Added integration tests and localStorage persistence.
 
 ## Tests
 

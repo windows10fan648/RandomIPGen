@@ -42,13 +42,16 @@
 ## Current features (do not remove)
 
 - IPv4/IPv6 generation with 1-100 quantity and range selector.
-- Dark/light theme toggle with persisted preference.
+- Dark/light theme toggle with persisted preference and Lucide-style icons.
 - Results list with per-item copy, Copy All, Download TXT, Export JSON.
 - Append random ports toggle (IPv4 colon, IPv6 brackets).
-- Rate limiting 100 req/min per IP, trust proxy.
-- Privacy and Terms pages, About with bug report link.
-- MCP Streamable HTTP server (`/mcp`, `mcp-server.js`) with titles/annotations.
-- Tests via `node --test`.
+- Rate limiting 100 req/min per IP, trust proxy, plus Vercel WAF.
+- Security headers, SEO metadata, robots.txt, sitemap.xml.
+- Privacy and Terms pages, About with bug report link and side-project note.
+- MCP Streamable HTTP server (`/mcp`, `mcp-server.js`) with titles/annotations and CORS.
+- MCP tools: generate_ips, validate_ip, list_ranges, ip_info, generate_with_ports, generate_in_cidr, bulk_validate.
+- Settings persisted in localStorage; aria-live results.
+- Tests via `node --test` (generator + API/MCP integration).
 
 ## Recent changes (do not remove)
 
@@ -56,4 +59,8 @@
 - Added Export as JSON and append-random-ports toggle (IPv6 bracket formatting).
 - Rate limit set to 100 requests/minute per IP with `trust proxy`.
 - Added MCP server using Streamable HTTP (`mcp.js`, `/mcp` endpoint, `mcp-server.js`).
+- Added MCP tools: list_ranges, ip_info, generate_with_ports, generate_in_cidr, bulk_validate.
+- Added dark/light theme toggle with Lucide icons and persisted preference.
+- Added security headers, SEO metadata, robots.txt, sitemap.xml.
+- Added integration tests and localStorage persistence.
 - vercel.json routes `/api/*` to Express and bundles `views/`.
