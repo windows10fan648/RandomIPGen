@@ -38,6 +38,7 @@
 
 - **Do not remove or disable existing features.** Agents may only fix bugs or improve the app.
 - Preserve all routes, endpoints, MCP tools, and UI features listed below.
+- **Always run `node --test` after making changes.** If any test fails, fix the issue immediately before finishing.
 
 ## Current features (do not remove)
 
