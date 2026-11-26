@@ -64,13 +64,13 @@ Error responses use appropriate HTTP status codes (400, 405, 404, 500) with a JS
 ### Example API requests
 
 ```bash
-curl -X POST http://localhost:3000/api/generate \
+curl -X POST https://randomipgen.duckdns.org/api/generate \
   -H "Content-Type: application/json" \
   -d '{"version":"ipv4","count":5}'
 ```
 
 ```bash
-curl -X POST http://localhost:3000/api/generate \
+curl -X POST https://randomipgen.duckdns.org/api/generate \
   -H "Content-Type: application/json" \
   -d '{"version":"ipv6","count":3}'
 ```
