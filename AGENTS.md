@@ -42,6 +42,7 @@
 ## Current features (do not remove)
 
 - IPv4/IPv6 generation with 1-100 quantity and range selector.
+- Dark/light theme toggle with persisted preference.
 - Results list with per-item copy, Copy All, Download TXT, Export JSON.
 - Append random ports toggle (IPv4 colon, IPv6 brackets).
 - Rate limiting 100 req/min per IP, trust proxy.
