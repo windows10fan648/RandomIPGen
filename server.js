@@ -57,6 +57,15 @@ app.use(express.urlencoded({ extended: true }));
 // Static assets (used for local development; Vercel serves public/ directly)
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Basic security headers
+app.use((req, res, next) => {
+  res.set('X-Content-Type-Options', 'nosniff');
+  res.set('X-Frame-Options', 'DENY');
+  res.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+  next();
+});
+
 // Home
 app.get('/', (_req, res) => {
   res.render('index', { title: 'RandomIPGen' });
