@@ -55,6 +55,7 @@
 - MCP Streamable HTTP server (`/mcp`, `mcp-server.js`) with titles/annotations and CORS.
 - MCP tools: generate_ips, validate_ip, list_ranges, ip_info, generate_with_ports, generate_in_cidr, bulk_validate.
 - Settings persisted in localStorage; aria-live results.
+- UI improvements: range tooltips, history panel, loading skeleton, keyboard shortcuts, JSONL/CSV exports, theme transitions.
 - Tests via `node --test` (generator + API/MCP integration).
 
 ## Recent changes (do not remove)
