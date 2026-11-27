@@ -20,6 +20,7 @@
     <div class="field">
       <label for="range">IP range</label>
       <select id="range"></select>
+      <small id="rangeHint" class="muted"></small>
     </div>
 
     <div class="checkbox-container">
@@ -50,9 +51,16 @@
 
     <div class="global-controls" id="globalControls" hidden>
       <button id="copyAllBtn" class="btn btn-secondary" type="button">Copy All</button>
+      <button id="copyJsonlBtn" class="btn btn-secondary" type="button">Copy JSONL</button>
       <button id="exportJsonBtn" class="btn btn-secondary" type="button">Export JSON</button>
+      <button id="exportCsvBtn" class="btn btn-secondary" type="button">Export CSV</button>
       <button id="downloadBtn" class="btn btn-secondary" type="button">Download TXT</button>
       <button id="regenerateBtn" class="btn btn-secondary" type="button">Generate Again</button>
+
+    <div id="history" class="history" hidden>
+      <h3>Recent generations</h3>
+      <ul id="historyList" class="history-list"></ul>
+    </div>
     </div>
 
     <p id="totalCount" class="muted total" hidden></p>

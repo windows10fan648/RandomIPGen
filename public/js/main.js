@@ -2,7 +2,12 @@
   const versionButtons = document.querySelectorAll('.toggle-btn');
   const countInput = document.getElementById('count');
   const rangeSelect = document.getElementById('range');
+  const rangeHint = document.getElementById('rangeHint');
   const portsToggle = document.getElementById('portsToggle');
+  const copyJsonlBtn = document.getElementById('copyJsonlBtn');
+  const exportCsvBtn = document.getElementById('exportCsvBtn');
+  const historyBox = document.getElementById('history');
+  const historyList = document.getElementById('historyList');
   const generateBtn = document.getElementById('generateBtn');
   const spinner = generateBtn.querySelector('.spinner');
   const btnText = generateBtn.querySelector('.btn-text');
@@ -45,6 +50,17 @@
     ipv4: ['any', 'private', 'public', 'loopback', 'link-local', 'multicast'],
     ipv6: ['any', 'global', 'unique-local', 'link-local', 'multicast'],
   };
+
+  const RANGE_HINTS = {
+    any: 'Any random address.',
+    private: 'Private ranges (RFC1918).',
+    public: 'Likely public (excludes special ranges).',
+    loopback: 'Loopback (127.0.0.0/8).',
+    'link-local': 'Link-local (169.254.0.0/16 / fe80::/10).',
+    multicast: 'Multicast addresses.',
+    global: 'Global unicast (2000::/3).',
+    'unique-local': 'Unique local (fc00::/7).',
+  };
   let selectedVersion = 'ipv4';
   let addresses = [];
   let ports = [];
@@ -55,6 +71,10 @@
     portsToggle.disabled = false;
   }
 
+  function updateRangeHint() {
+    if (rangeHint) rangeHint.textContent = RANGE_HINTS[rangeSelect.value] || '';
+  }
+
   function populateRanges(version) {
     rangeSelect.innerHTML = '';
     RANGES[version].forEach((r) => {
@@ -63,7 +83,13 @@
       opt.textContent = r;
       rangeSelect.appendChild(opt);
     });
+    updateRangeHint();
   }
+
+  rangeSelect.addEventListener('change', () => {
+    updateRangeHint();
+    saveSettings();
+  });
   populateRanges(selectedVersion);
   updatePortsToggleState();
 
@@ -94,6 +120,53 @@
         ports: portsToggle.checked,
       }));
     } catch (e) {}
+  }
+
+  function loadHistory() {
+    try {
+      return JSON.parse(localStorage.getItem('ripHistory') || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveHistory(version, addresses, portsArr) {
+    try {
+      const history = loadHistory();
+      history.unshift({ version, addresses: addresses.slice(), ports: portsArr.slice(), ts: Date.now() });
+      localStorage.setItem('ripHistory', JSON.stringify(history.slice(0, 5)));
+    } catch (e) {}
+  }
+
+  function renderHistory() {
+    if (!historyBox || !historyList) return;
+    const history = loadHistory();
+    if (history.length === 0) {
+      historyBox.hidden = true;
+      return;
+    }
+    historyBox.hidden = false;
+    historyList.innerHTML = '';
+    history.forEach((h, idx) => {
+      const li = document.createElement('li');
+      li.className = 'history-item';
+      const label = document.createElement('span');
+      label.textContent = `${h.version.toUpperCase()} · ${h.addresses.length} addresses`;
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.type = 'button';
+      btn.textContent = 'Copy';
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(h.addresses.join('\\n'));
+          btn.textContent = 'Copied!';
+          setTimeout(() => (btn.textContent = 'Copy'), 1200);
+        } catch (e) {}
+      });
+      li.appendChild(label);
+      li.appendChild(btn);
+      historyList.appendChild(li);
+    });
   }
 
   function randomPort() {
@@ -164,11 +237,56 @@
     saveSettings();
   });
 
-  rangeSelect.addEventListener('change', saveSettings);
+  // saveSettings already called in range change handler above
 
   portsToggle.addEventListener('change', () => {
     renderResults();
     saveSettings();
+  });
+
+  if (copyJsonlBtn) {
+    copyJsonlBtn.addEventListener('click', async () => {
+      if (addresses.length === 0) return;
+      try {
+        await navigator.clipboard.writeText(addresses.map((a, i) => JSON.stringify({ ip: a, port: portsToggle.checked ? ports[i] : null })).join('\\n'));
+        showToast('Copied JSONL', 'success');
+      } catch (e) {
+        showToast('Copy failed', 'error');
+      }
+    });
+  }
+
+  if (exportCsvBtn) {
+    exportCsvBtn.addEventListener('click', () => {
+      if (addresses.length === 0) return;
+      const rows = ['ip,port'];
+      addresses.forEach((a, i) => {
+        rows.push(`${a},${portsToggle.checked ? ports[i] : ''}`);
+      });
+      const blob = new Blob([rows.join('\\n') + '\\n'], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${selectedVersion}-addresses.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      showToast('Exported CSV file', 'success');
+    });
+  }
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      generate();
+    }
+    if (e.key === 'Escape') {
+      addresses = [];
+      ports = [];
+      renderResults();
+    }
   });
 
   function renderResults() {
@@ -230,6 +348,18 @@
     }
 
     setLoading(true);
+    // Show loading skeleton
+    if (resultsList) {
+      resultsList.innerHTML = '';
+      for (let i = 0; i < 5; i++) {
+        const li = document.createElement('li');
+        li.className = 'result-item skeleton';
+        li.innerHTML = '<span class="result-addr skeleton-bar"></span>';
+        resultsList.appendChild(li);
+      }
+      resultsList.hidden = false;
+      emptyState.hidden = true;
+    }
     try {
       const res = await fetch('/api/generate', {
         method: 'POST',
@@ -247,8 +377,11 @@
         // keep dropdown in sync if server normalized
       }
       renderResults();
+      saveHistory(selectedVersion, addresses, ports);
+      renderHistory();
       showToast(`Generated ${addresses.length} addresses`, 'success');
     } catch (err) {
+      renderResults();
       showToast(err.message || 'Failed to generate addresses.', 'error');
     } finally {
       setLoading(false);
@@ -312,5 +445,6 @@
   });
 
   updateGenerateButton();
+  renderHistory();
   renderResults();
 })();

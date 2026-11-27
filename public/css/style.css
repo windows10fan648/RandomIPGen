@@ -50,6 +50,11 @@ body {
   color: var(--text);
   min-height: 100vh;
   line-height: 1.5;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.card, .btn, .result-item, .toast {
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .container {
@@ -291,6 +296,45 @@ input[type="checkbox"]:disabled {
   transition: border-color 0.15s ease;
 }
 .empty-state:hover { border-color: var(--accent); }
+
+.skeleton {
+  opacity: 0.6;
+}
+.skeleton-bar {
+  display: inline-block;
+  width: 60%;
+  height: 14px;
+  background: linear-gradient(90deg, var(--card-2) 25%, var(--border) 50%, var(--card-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+  border-radius: 4px;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.history {
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.history h3 { margin: 0 0 8px; font-size: 0.95rem; }
+.history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
 
 .results-list {
   list-style: none;
